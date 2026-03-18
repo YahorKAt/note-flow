@@ -1,56 +1,62 @@
 import "./App.css";
-import Button from "./components/Button/Button";
-import CardButton from "./components/CardButton/CardButton";
-import JournalItem from "./components/JournalItem/JournalItem";
+import Header from "./components/Header/Header";
+import Body from "./layouts/Body/Body";
+import JournalList from "./components/JournalList/JournalList";
+import JournalAddButton from "./components/JournalAddButton/JournalAddButton";
+import LeftPanel from "./layouts/LeftPanel/LeftPanel";
+import JournalForm from "./components/JournalForm/JournalForm";
+import { useState } from "react";
+
+const INITIAL_DATA = [
+    {
+        id: 1,
+        title: "Подготовка обновлений курсов",
+        date: new Date(),
+        text: "Горные походы открывают удивительные природные ландшафты",
+    },
+    {
+        id: 2,
+        title: "Поход в годы",
+        date: new Date(),
+        text: "Различают альпинизм и горный туризм. Если в альпинизме главная",
+    },
+    {
+        id: 3,
+        title: "Первая заметка",
+        date: new Date(),
+        text: "Большое значение в горном туризме придается бытовому обустройству",
+    },
+];
 
 function App() {
-    const data = [
-        {
-            title: "Подготовка обновлений курсов",
-            date: new Date(),
-            text: "Горные походы открывают удивительные природные ландшафты",
-        },
-        {
-            title: "Поход в годы",
-            date: new Date(),
-            text: "Различают альпинизм и горный туризм. Если в альпинизме главная",
-        },
-        {
-            title: "Первая заметка",
-            date: new Date(),
-            text: "Большое значение в горном туризме придается бытовому обустройству",
-        },
-    ];
+    const [items, setItems] = useState(INITIAL_DATA);
+
+    const addItem = item => {
+        setItems(oldItems => [
+            ...oldItems,
+            {
+                id:
+                    oldItems.length > 0
+                        ? Math.max(...oldItems.map(i => i.id)) + 1
+                        : 1,
+                title: item.title,
+                date: new Date(item.date),
+                text: item.text,
+            },
+        ]);
+    };
+
     return (
-        <>
-            <h1>Заголовок</h1>
-            <p>Какой-то текст</p>
-            <Button />
-            <CardButton>Новое воспоминание</CardButton>
-            <CardButton>
-                <JournalItem
-                    title={data[0].title}
-                    text={data[0].text}
-                    date={data[0].date}
-                />
-            </CardButton>
-
-            <CardButton>
-                <JournalItem
-                    title={data[1].title}
-                    text={data[1].text}
-                    date={data[1].date}
-                />
-            </CardButton>
-
-            <CardButton>
-                <JournalItem
-                    title={data[2].title}
-                    text={data[2].text}
-                    date={data[2].date}
-                />
-            </CardButton>
-        </>
+        <div className="app">
+            <LeftPanel>
+                <Header />
+                <JournalAddButton />
+                <JournalList items={items} />
+            </LeftPanel>
+            <Body>
+                <JournalForm onSubmit={addItem} />
+            </Body>
+        </div>
     );
 }
 
