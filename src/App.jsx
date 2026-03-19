@@ -5,31 +5,31 @@ import JournalList from "./components/JournalList/JournalList";
 import JournalAddButton from "./components/JournalAddButton/JournalAddButton";
 import LeftPanel from "./layouts/LeftPanel/LeftPanel";
 import JournalForm from "./components/JournalForm/JournalForm";
-import { useState } from "react";
-
-const INITIAL_DATA = [
-    {
-        id: 1,
-        title: "Подготовка обновлений курсов",
-        date: new Date(),
-        text: "Горные походы открывают удивительные природные ландшафты",
-    },
-    {
-        id: 2,
-        title: "Поход в годы",
-        date: new Date(),
-        text: "Различают альпинизм и горный туризм. Если в альпинизме главная",
-    },
-    {
-        id: 3,
-        title: "Первая заметка",
-        date: new Date(),
-        text: "Большое значение в горном туризме придается бытовому обустройству",
-    },
-];
+import { useEffect, useState } from "react";
 
 function App() {
-    const [items, setItems] = useState(INITIAL_DATA);
+    const [items, setItems] = useState([]);
+
+    // чтение из localStorage
+    useEffect(() => {
+        const data = JSON.parse(localStorage.getItem("data"));
+        if (data) {
+            setItems(
+                data.map(item => ({
+                    ...item,
+                    date: new Date(item.date),
+                })),
+            );
+        }
+    }, []);
+
+    // запись в localStorage
+    useEffect(() => {
+        if (!items.length) {
+            console.log("Запись");
+            localStorage.setItem("data", JSON.stringify(items));
+        }
+    }, [items]);
 
     const addItem = item => {
         setItems(oldItems => [
