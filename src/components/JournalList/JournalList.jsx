@@ -9,7 +9,7 @@ function JournalList({ items }) {
         );
     }
 
-    const sortItems = (a, b) => a.date - b.date;
+    const sortItems = (a, b) => b.date - a.date;
 
     return (
         <>
